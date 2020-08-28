@@ -1,0 +1,45 @@
+.add__button {
+    background: #fff;
+    margin-right: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 8px 10px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.add-note__container {
+    width: 90%;
+    background: #fff;
+    padding: 20px;
+    margin: 20px auto 0;
+    border-radius: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px
+}
+
+textarea {
+    height: 100px;
+    width: 100%;
+}
+
+label {
+    display: block;
+}
+
+button[type='reset']:hover {
+    background: rgba(255, 24, 24, 0.801);
+}
+
+button[type='submit']:hover {
+    background: #29862e;
+}
+
+textarea:hover, input[type='text']:hover {
+    background: rgba(228, 228, 228, 0.815);
+}
+
