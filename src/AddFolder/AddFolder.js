@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import ValidationError from '../ValidationError/ValidationError';
 import config from '../config';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
-export default class AddFolder extends Component {
+class AddFolder extends Component {
 
     constructor(props) {
         super(props);
-        this.nameInput = React.createRef();
         this.state = {
-            name: ''
+            name: '',
+            error: ''
         }
     }
+    
     
     handleSubmit(e) {
         e.preventDefault();
@@ -37,7 +39,7 @@ export default class AddFolder extends Component {
             this.setState({
                 name: ''
             });
-            this.props.handleAdd(folder);
+            this.props.handleAdd(e);
           })
           .catch(err => {
             this.setState({
@@ -47,9 +49,12 @@ export default class AddFolder extends Component {
           this.props.history.push('/');
     }
 
+    componentDidMount() {
+      this._isMounted = true;
+    }
+
     handleName(e) {
-        console.log(this.nameInput.current.value)
-        this.setState({name: this.nameInput.current.value});
+        this.setState({name: e.target.value});
     }
 
     validateName() {
@@ -72,8 +77,8 @@ export default class AddFolder extends Component {
                         className="registration__control"
                         name="name" 
                         id="name" 
-                        ref={this.nameInput}
                         onChange={e => this.handleName(e)}
+                        required
                     />
                     <ValidationError message={nameError}/>
                 </div>
@@ -93,7 +98,12 @@ export default class AddFolder extends Component {
                     Save
                     </button>
                 </div>
+                <div className="error__container">
+                  {this.state.error}
+                </div>
             </form>
         )
     }
 }
+
+export default withRouter(AddFolder)

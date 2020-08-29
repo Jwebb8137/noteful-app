@@ -15,7 +15,6 @@ export default class NoteListNav extends React.Component {
 
   handleClickDelete = (e, folderId) => {
     e.preventDefault()
-    console.log(folderId)
 
     fetch(`${config.API_ENDPOINT}/folders/${folderId}`, {
       method: 'DELETE',

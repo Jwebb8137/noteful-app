@@ -18,6 +18,13 @@ button:hover {
     border-radius: 10px;
 }
 
+.error__container {
+    display: block;
+    color: #ff0000;
+    font-size: 20px;
+    margin-top: 25px;
+}
+
 .form-group {
     margin-bottom: 15px
 }

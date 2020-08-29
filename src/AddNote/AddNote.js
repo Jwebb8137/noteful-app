@@ -3,8 +3,9 @@ import config from '../config';
 import { Link } from 'react-router-dom';
 import './AddNote.css';
 import ValidationError from '../ValidationError/ValidationError'
+import { withRouter } from 'react-router';
 
-export default class Addnote extends Component {
+class AddNote extends Component {
 
     constructor(props) {
         super(props);
@@ -15,7 +16,8 @@ export default class Addnote extends Component {
             name: 'Card',
             content: 'Info',
             folderId: folderId,
-            modified: Date().toLocaleString()
+            modified: Date().toLocaleString(),
+            error: ''
         }
     }
 
@@ -47,14 +49,14 @@ export default class Addnote extends Component {
                 name: '',
                 content: '',
             });
-            this.props.handleState(name);
+            this.props.handleAdd(e);
           })
           .catch(err => {
             this.setState({
               error: err.message
             });
           });
-          this.props.history.push('/');
+          this.props.history.goBack();
     }
 
     componentWillUnmount() {
@@ -65,7 +67,6 @@ export default class Addnote extends Component {
     }
 
     handleName(name) {
-        console.log(this.nameInput.current.value)
         this.setState({name: this.nameInput.current.value});
     }
 
@@ -98,7 +99,8 @@ export default class Addnote extends Component {
                     <input type="text" className="registration__control"
                     name="name" id="noteName"
                     ref={this.nameInput}
-                    onChange={e => this.handleName(e.target.name)}/>
+                    onChange={e => this.handleName(e.target.name)}
+                    required/>
                     <ValidationError message={nameError}/>
                 </div>
                 <div className="form-group">
@@ -106,7 +108,8 @@ export default class Addnote extends Component {
                     <textarea className="content__box"
                     name="content" id="noteContent"
                     ref={this.contentInput}
-                    onChange={e => this.handleContent(e.target.content)}>
+                    onChange={e => this.handleContent(e.target.content)}
+                    required>
                     </textarea>
                     <ValidationError message={contentError}/>
                 </div>
@@ -123,8 +126,13 @@ export default class Addnote extends Component {
                     }>
                         Save
                     </button>
+                    <div className="error__container">
+                        {this.state.error}
+                    </div>
                 </div>
             </form>
         )
     }
 }
+
+export default withRouter(AddNote);

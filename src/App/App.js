@@ -11,6 +11,8 @@ import ApiContext from '../ApiContext';
 import config from '../config';
 import './App.css';
 import Error from '../Error/Error';
+import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 
 class App extends Component {
     state = {
@@ -23,33 +25,55 @@ class App extends Component {
             fetch(`${config.API_ENDPOINT}/notes`),
             fetch(`${config.API_ENDPOINT}/folders`)
         ])
-            .then(([notesRes, foldersRes]) => {
-                if (!notesRes.ok)
-                    return notesRes.json().then(e => Promise.reject(e));
-                if (!foldersRes.ok)
-                    return foldersRes.json().then(e => Promise.reject(e));
+        .then(([notesRes, foldersRes]) => {
+            if (!notesRes.ok)
+                return notesRes.json().then(e => Promise.reject(e));
+            if (!foldersRes.ok)
+                return foldersRes.json().then(e => Promise.reject(e));
 
-                return Promise.all([notesRes.json(), foldersRes.json()]);
-            })
-            .then(([notes, folders]) => {
-                this.setState({notes, folders});
-            })
-            .catch(error => {
-                console.error({error});
-            });
+            return Promise.all([notesRes.json(), foldersRes.json()]);
+        })
+        .then(([notes, folders]) => {
+            this.setState({notes, folders});
+        })
+        .catch(error => {
+            console.error({error});
+        });
     }
 
-    handleDeleteNote = noteId => {
+    handleAdd = (e) => {
+        Promise.all([
+            fetch(`${config.API_ENDPOINT}/notes`),
+            fetch(`${config.API_ENDPOINT}/folders`)
+        ])
+        .then(([notesRes, foldersRes]) => {
+            if (!notesRes.ok)
+                return notesRes.json().then(e => Promise.reject(e));
+            if (!foldersRes.ok)
+                return foldersRes.json().then(e => Promise.reject(e));
+
+            return Promise.all([notesRes.json(), foldersRes.json()]);
+        })
+        .then(([notes, folders]) => {
+            this.setState({notes, folders});
+        })
+        .catch(error => {
+            console.error({error});
+        });
+    }
+
+    handleDeleteNote = (noteId, e) => {
         this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
         });
     };
 
-    handleDeleteFolder = folderId => {
+    handleDeleteFolder = (folderId, e) => {
         this.setState({
             folders: this.state.folders.filter(folder => folder.id !== folderId)
         });
-        console.log('deleting folder now')
+        this.handleAdd(e)
+        this.props.history.push('/')
     };
 
     renderNavRoutes() {
@@ -82,8 +106,8 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
-                <Route path="/folders/:folderId/add-note" component={AddNote} />
-                <Route path="/add-folder" component={AddFolder} />
+                <Route path="/folders/:folderId/add-note" component={() => <AddNote handleAdd={this.handleAdd} />} />
+                <Route exact path="/add-folder" component={() => <AddFolder handleAdd={this.handleAdd} />} />
             </>
         );
     }
@@ -114,4 +138,8 @@ class App extends Component {
     }
 }
 
-export default App;
+App.propTypes = {
+    path: PropTypes.string,
+};
+
+export default withRouter(App);
