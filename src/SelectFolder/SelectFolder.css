@@ -1,0 +1,24 @@
+.folder__list {
+    list-style: none;
+}
+
+.folder__link {
+    background: #fff;
+    color: #0b1b32;
+    display: block;
+    padding: 8px 16px;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.folder-select__container {
+    padding: 20px;
+}
+
+.folder-select__container ul{
+    padding: 0;
+}
+
+.folder-select__container h2{
+   color: #fff;
+}

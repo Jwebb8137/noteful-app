@@ -6,7 +6,8 @@ import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import AddFolder from '../AddFolder/AddFolder';
-import AddNote from '../AddNote/AddNote'
+import AddNote from '../AddNote/AddNote';
+import SelectFolder from '../SelectFolder/SelectFolder';
 import ApiContext from '../ApiContext';
 import config from '../config';
 import './App.css';
@@ -17,7 +18,8 @@ import PropTypes from 'prop-types';
 class App extends Component {
     state = {
         notes: [],
-        folders: []
+        folders: [],
+        err: ''
     };
 
     componentDidMount() {
@@ -69,17 +71,23 @@ class App extends Component {
     };
 
     handleDeleteFolder = (folderId, e) => {
-        this.setState({
-            folders: this.state.folders.filter(folder => folder.id !== folderId)
-        });
-        this.handleAdd(e)
-        this.props.history.push('/')
+        if (this.state.folders.length > 1) {
+            this.setState({
+                folders: this.state.folders.filter(folder => folder.id !== folderId)
+            });
+            this.handleAdd(e)
+            this.props.history.push('/')    
+        } else {
+            this.setState ({
+                err: 'Cannot Delete Folder: You Must Have One Active Folder'
+            })
+        }
     };
 
     renderNavRoutes() {
         return (
             <>
-                {['/', '/folder/:folderId'].map(path => (
+                {['/', '/folder/:folderName'].map(path => (
                     <Route
                         exact
                         key={path}
@@ -88,8 +96,9 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageNav} />
-                <Route exact path="/add-folder" component={NotePageNav} />
-                <Route exact path="/folders/:folderId/add-note" component={NoteListNav} />
+                <Route path="/add-note" component={NotePageNav} />
+                <Route path="/add-folder" component={NotePageNav} />
+                <Route path="/folder/:folderId/add-note" component={NotePageNav} />
             </>
         );
     }
@@ -106,7 +115,8 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
-                <Route path="/folders/:folderId/add-note" component={() => <AddNote handleAdd={this.handleAdd} />} />
+                <Route path="/add-note" component={() => <SelectFolder handleAdd={this.handleAdd} />} />
+                <Route path="/folder/:folderId/add-note" component={() => <AddNote handleAdd={this.handleAdd} />} />
                 <Route exact path="/add-folder" component={() => <AddFolder handleAdd={this.handleAdd} />} />
             </>
         );
@@ -130,7 +140,8 @@ class App extends Component {
                                 <FontAwesomeIcon icon="check-double" />
                             </h1>
                         </header>
-                        <main className="App__main">{this.renderMainRoutes()}</main>
+                        <main className="App__main">{this.renderMainRoutes()}
+                        </main>
                     </Error>
                 </div>
             </ApiContext.Provider>

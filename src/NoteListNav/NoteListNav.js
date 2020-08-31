@@ -13,35 +13,47 @@ export default class NoteListNav extends React.Component {
   }
   static contextType = ApiContext;
 
+  state = {
+    err: ''
+  }
+
   handleClickDelete = (e, folderId) => {
     e.preventDefault()
+    const { folders=[] } = this.context
 
-    fetch(`${config.API_ENDPOINT}/folders/${folderId}`, {
-      method: 'DELETE',
-      headers: {
-        'content-type': 'application/json'
-      },
-    })
-      .then(res => {
-        if (!res.ok)
-          return res.json().then(e => Promise.reject(e))
-        return res.json()
+    if (folders.length > 1) {
+      fetch(`${config.API_ENDPOINT}/folders/${folderId}`, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json'
+        },
       })
-      .then(() => {
-        this.context.deleteFolder(folderId)
-        // allow parent to perform extra behaviour
-        this.props.onDeleteFolder(folderId)
-      })
-      .catch(error => {
-        console.error({ error })
-      })
-  }
+        .then(res => {
+          if (!res.ok)
+            return res.json().then(e => Promise.reject(e))
+          return res.json()
+        })
+        .then(() => {
+          this.context.deleteFolder(folderId)
+          // allow parent to perform extra behaviour
+          this.props.onDeleteFolder(folderId)
+        })
+        .catch(error => {
+          console.error({ error })
+        })
+      } else {
+        this.setState ({
+          err: "Cannot delete folder: Must have one working folder present"
+        })
+      }
+    }
 
   render() {
     const { folders=[], notes=[] } = this.context
     return (
       <div className='NoteListNav'>
         <ul className='NoteListNav__list'>
+          <span className='error'>{this.state.err}</span>
           {folders.map(folder =>
             <li key={folder.id}>
               <NavLink

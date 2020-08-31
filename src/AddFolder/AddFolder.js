@@ -3,6 +3,7 @@ import ValidationError from '../ValidationError/ValidationError';
 import config from '../config';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 
 class AddFolder extends Component {
 
@@ -64,6 +65,13 @@ class AddFolder extends Component {
         }
     }
 
+    componentWillUnmount() {
+      // fix Warning: Can't perform a React state update on an unmounted component
+      this.setState = (state,callback)=>{
+          return;
+      };
+    }
+
     render() {
         const nameError = this.validateName();
         return(
@@ -105,5 +113,9 @@ class AddFolder extends Component {
         )
     }
 }
+
+AddFolder.propTypes = {
+  handleAdd: PropTypes.func,
+};
 
 export default withRouter(AddFolder)

@@ -7,7 +7,7 @@
 
 .NoteListMain__button-container {
   max-width: 380px;
-  margin: 0 10px;
+  margin: 25px 10px 0;
 }
 
 .NoteListMain__add-note-button {
@@ -16,4 +16,9 @@
 .NoteListMain__add-note-button:hover {
   background-color: #fff;
   color: #010d1e;
+}
+
+.heading {
+  color: #fff;
+  margin: 25px;
 }

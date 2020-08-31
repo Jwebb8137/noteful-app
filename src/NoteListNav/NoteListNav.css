@@ -47,3 +47,10 @@
 .Folder__delete {
   margin-top: 10px;
 }
+
+.error {
+  text-align: center;
+  display: block;
+  padding: 5px;
+  margin-bottom: 10px;
+}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import './AddNote.css';
 import ValidationError from '../ValidationError/ValidationError'
 import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 
 class AddNote extends Component {
 
@@ -13,7 +14,7 @@ class AddNote extends Component {
         this.nameInput = React.createRef();
         this.contentInput = React.createRef();
         this.state = {
-            name: 'Card',
+            name: '',
             content: 'Info',
             folderId: folderId,
             modified: Date().toLocaleString(),
@@ -56,7 +57,7 @@ class AddNote extends Component {
               error: err.message
             });
           });
-          this.props.history.goBack();
+          this.props.history.push(`/folder/${folderId}`);
     }
 
     componentWillUnmount() {
@@ -91,6 +92,7 @@ class AddNote extends Component {
     render() {
         const nameError = this.validateName();
         const contentError = this.validateContent();
+
         return(
             <form className="add-note__container" onSubmit={e => this.handleSubmit(e)}>
                 <h2>Add Note</h2>
@@ -134,5 +136,9 @@ class AddNote extends Component {
         )
     }
 }
+
+AddNote.propTypes = {
+    handleAdd: PropTypes.func,
+};
 
 export default withRouter(AddNote);
